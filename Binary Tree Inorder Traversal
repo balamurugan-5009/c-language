@@ -1,0 +1,15 @@
+#include <stdlib.h>
+
+void helper(struct TreeNode* root, int* res, int* returnSize) {
+    if (!root) return;
+    helper(root->left, res, returnSize);
+    res[(*returnSize)++] = root->val;
+    helper(root->right, res, returnSize);
+}
+
+int* inorderTraversal(struct TreeNode* root, int* returnSize){
+    int* res = malloc(100 * sizeof(int)); // max nodes = 100
+    *returnSize = 0;
+    helper(root, res, returnSize);
+    return res;
+}
