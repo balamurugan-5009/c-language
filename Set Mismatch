@@ -1,0 +1,19 @@
+#include <stdlib.h>
+
+int* findErrorNums(int* nums, int numsSize, int* returnSize) {
+    int* hash = calloc(numsSize + 1, sizeof(int));
+    int* result = malloc(2 * sizeof(int));
+
+    for (int i = 0; i < numsSize; i++) {
+        hash[nums[i]]++;
+    }
+
+    for (int i = 1; i <= numsSize; i++) {
+        if (hash[i] == 2) result[0] = i;   // duplicated
+        if (hash[i] == 0) result[1] = i;   // missing
+    }
+
+    *returnSize = 2;
+    free(hash);
+    return result;
+}
