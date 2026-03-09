@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+typedef struct {
+    int** data;
+    int* columnSizes;
+    int size;
+    int capacity;
+} Combinations;
+void addCombination(Combinations* res, int* path, int k) {
+    if (res->size == res->capacity) {
+        res->capacity *= 2;
+        res->data = realloc(res->data, res->capacity * sizeof(int*));
+        res->columnSizes = realloc(res->columnSizes, res->capacity * sizeof(int));
+    }
+    res->data[res->size] = malloc(k * sizeof(int));
+    memcpy(res->data[res->size], path, k * sizeof(int));
+    res->columnSizes[res->size] = k;
+    res->size++;
+}
+void backtrack(int start, int n, int k, int* path, int depth, Combinations* res) {
+    if (depth == k) {
+        addCombination(res, path, k);
+        return;
+    }
+    for (int i = start; i <= n; i++) {
+        path[depth] = i;
+        backtrack(i + 1, n, k, path, depth + 1, res);
+    }
+}
+int** combine(int n, int k, int* returnSize, int** returnColumnSizes) {
+    Combinations res;
+    res.size = 0;
+    res.capacity = 100;
+    res.data = malloc(res.capacity * sizeof(int*));
+    res.columnSizes = malloc(res.capacity * sizeof(int));
+
+    int* path = malloc(k * sizeof(int));
+    backtrack(1, n, k, path, 0, &res);
+    free(path);
+    *returnSize = res.size;
+    *returnColumnSizes = res.columnSizes;
+    return res.data;
+}
